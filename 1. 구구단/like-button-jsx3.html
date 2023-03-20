@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>웹 게임</title>
+    <meta charset="utf-8">
+</head>
+<body>
+<div id="root">
+
+</div>
+<!--개발용-->
+<script crossOrigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossOrigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<!--배포용-->
+<!--<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>-->
+<!--<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>-->
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script type="text/babel">
+  'use strict';
+
+  const LikeButton = () =>{ // 함수형 컴포넌트 X, 함수 컴포넌트 O
+      const [liked, setLiked] = React.useState(false); // this.state, 구조분해 (1번째 요소 = state 값, 2번째 요소는 state 바꾸는 함수)
+      // const [news, setNews] = React.useState(['뉴스1','뉴스2','뉴스3','뉴스4','뉴스5']);
+      // const [category, setCategory] = React.useState(['스포츠','연예','경제','시사','정치']);
+      if (liked) {
+          return 'You liked this.';
+      }
+      return (
+        <button onClick={() => { setLiked(true); }}>Like</button>
+      );
+  }
+
+
+</script>
+<script type="text/babel">
+    // ReactDOM.render(React.createElement(LikeButton), document.querySelector('#root'));
+    // ReactDOM.render(<LikeButton />, document.querySelector('#root'));
+    // React 17 code (if you are react 18, executed by react 17)
+    ReactDOM.createRoot(document.querySelector('#root')).render(<LikeButton />);
+    // React 18 code
+</script>
+</body>
+</html>
