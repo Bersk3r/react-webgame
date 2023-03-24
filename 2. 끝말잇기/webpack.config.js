@@ -1,9 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
-const RefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack');
+const RefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 module.exports = {
-  name: 'gugudan-setting',
+  name: 'app',
   mode: 'development', // 실 서비스 : production
   devtool: 'eval', // 실 서비스 : hidden-source-map
   resolve: {
@@ -30,7 +30,7 @@ module.exports = {
           }],
           '@babel/preset-react'
         ],
-        // 웹팩에 기본으로 적용되는 내용
+        // 웹팩에 기본으로 적용되는 내요
         plugins: [
           '@babel/plugin-proposal-class-properties',
           'react-refresh/babel',
@@ -43,13 +43,18 @@ module.exports = {
   plugins: [
     new RefreshWebpackPlugin()
   ],
+
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'app.js'
+    path: path.join(__dirname, '/dist/'),
+    filename: '[name].js',
+    publicPath: '/dist/',
   },
   // 개발 편의를 위해 두는 서버
   devServer: {
-    publicPath: '/dist/',
+    // dist 폴더 내부에 생성
+    // dev 서버는 메모리에 생성
+    devMiddleware: { publicPath: '/dist/' }, // app.use('/dist', express.static(__dirname, 'dist'))
+    static: { directory: path.resolve(__dirname) },
     hot: true,
   },
 };
