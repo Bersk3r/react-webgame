@@ -1,7 +1,8 @@
 // const React = require('react');
 // const { Component } = React;
 
-import React, { Component } from 'react';
+import React from 'react';
+import { Component } from 'react';
 import Try from './Try';
 
 function getNumbers() { // 숫자 4개를 중복 없이 뽑는 함수

@@ -26,7 +26,6 @@ module.exports = {
               // 하기 내용은 한국에서 5%이상 사용되는 브라우저 지원 내용
               browsers: ['> 5% in KR',],
             },
-            debug:true
           }],
           '@babel/preset-react'
         ],
@@ -43,6 +42,8 @@ module.exports = {
   plugins: [
     new RefreshWebpackPlugin()
   ],
+
+  cache: true,
 
   output: {
     path: path.join(__dirname, '/dist/'),
