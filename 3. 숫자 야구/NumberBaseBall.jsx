@@ -19,6 +19,7 @@ const NumberBaseBall = () =>{
   const [value, setValue] = useState('');
   const [answer, setAnswer] = useState(getNumbers);
   const [tries, setTries] = useState([]);
+  const inputEl = useRef(null);
 
   const onSubmitForm = (e) => {
     e.preventDefault();
@@ -33,6 +34,7 @@ const NumberBaseBall = () =>{
       setValue('');
       setAnswer(getNumbers());
       setTries([]);
+      inputEl.current.focus();
 
     } else {
       const answerArray = value.split('').map((v) => parseInt(v));
@@ -47,6 +49,8 @@ const NumberBaseBall = () =>{
         setValue('');
         setAnswer(getNumbers());
         setTries([]);
+        inputEl.current.focus();
+
       } else { // 10번 이내에 틀렸을 때
         for(let i = 0; i < 4; i += 1) {
           if(answerArray[i] === answer[i]) {
@@ -59,6 +63,7 @@ const NumberBaseBall = () =>{
         setTries((prevTries) => {
           return [...tries, { try: value, result: `${strike} 스트라이크, ${ball} 볼입니다.`}];
         });
+        inputEl.current.focus();
       }
     }
     console.log(value);
@@ -72,7 +77,13 @@ const NumberBaseBall = () =>{
     <>
       <h1>{result}</h1>
       <form onSubmit={onSubmitForm}>
-        <input maxLength={4} value={value} onChange={onChangeInput} />
+        <input
+          ref={inputEl}
+          maxLength={4}
+          value={value}
+          onChange={onChangeInput}
+        />
+        <button>입력!</button>
       </form>
       <div>시도 : {tries.length}</div>
       <ul>

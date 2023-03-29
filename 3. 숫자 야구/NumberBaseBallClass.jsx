@@ -1,8 +1,8 @@
 // const React = require('react');
 // const { Component } = React;
 
-import React from 'react';
-import { Component } from 'react';
+
+import React, { Component, createRef } from 'react';
 import Try from './Try';
 
 function getNumbers() { // 숫자 4개를 중복 없이 뽑는 함수
@@ -32,13 +32,15 @@ class NumberBaseBall extends Component {
             result: '홈런!',
             tries: [...prevState.tries, { try : value, result: '홈런!'}],
           }
-        })
+        });
+
         alert('게임을 다시 시작합니다!');
         this.setState({
           value:'',
           answer: getNumbers(),
           tries: [],
         });
+        this.inputRef.current.focus();
     } else {
       const answerArray = value.split('').map((v) => parseInt(v));
       let strike = 0;
@@ -54,6 +56,7 @@ class NumberBaseBall extends Component {
           answer: getNumbers(),
           tries: [],
         });
+        this.inputRef.current.focus();
       } else { // 10번 이내에 틀렸을 때
         for(let i = 0; i < 4; i += 1) {
           if(answerArray[i] === answer[i]) {
@@ -67,6 +70,7 @@ class NumberBaseBall extends Component {
             tries: [...prevState.tries, { try: value, result: `${strike} 스트라이크, ${ball} 볼입니다.`}],
             value: '',
           }
+          this.inputRef.current.focus();
         });
       }
     }
@@ -80,12 +84,15 @@ class NumberBaseBall extends Component {
       value: e.target.value,
     });
   }
+
+  inputRef = createRef();
+
   render() {
     return (
       <>
         <h1>{this.state.result}</h1>
         <form onSubmit={this.onSubmitForm}>
-          <input maxLength={4} value={this.state.value} onChange={this.onChangeInput} />
+          <input ref={this.inputRef} maxLength={4} value={this.state.value} onChange={this.onChangeInput} />
         </form>
         <div>시도 : {this.state.tries.length}</div>
         <ul>
