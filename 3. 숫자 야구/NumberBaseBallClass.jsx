@@ -85,7 +85,7 @@ class NumberBaseBall extends Component {
     });
   }
 
-  inputRef = createRef();
+  inputRef = createRef(); // this.inputRef를 선언
 
   render() {
     return (
