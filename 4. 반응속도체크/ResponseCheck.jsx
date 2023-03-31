@@ -43,6 +43,13 @@ const ResponseCheck = () => {
         <button onClick={onReset}>리셋</button>
       </>
   };
+  // return [
+  //   <div key="사과">사과</div>,
+  //   <div key="배">배</div>,
+  //   <div key="감">감</div>,
+  //   <div key="귤">귤</div>,
+  //   <div key="배">배</div>,
+  // ];
 
   return (
     <>
@@ -53,6 +60,16 @@ const ResponseCheck = () => {
       >
         {message}
       </div>
+      {/*{(() => {*/}
+      {/*  if (result.length === 0) {*/}
+      {/*    return null;*/}
+      {/*  } else {*/}
+      {/*    return <>*/}
+      {/*      <div>평균 시간: {result.reduce((a, c) => a + c) / result.length}ms</div>*/}
+      {/*      <button onClick={onReset}>리셋</button>*/}
+      {/*    </>*/}
+      {/*  }*/}
+      {/*})}*/}
       { renderAverage() }
     </>
   );
