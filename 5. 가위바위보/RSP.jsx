@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const rspCoords = {
   바위: '-13px',
@@ -18,93 +18,61 @@ const computerChoice = (imgCoord) => {
   })[0];
 }
 
-class RSP extends Component {
-    state = {
-        imgCoord: rspCoords.바위,
-        result: '',
-        score: 0,
-    };
+const RSP = () => {
+  const [imgCoord, setImgcoord] = useState(rspCoords.바위);
+  const [result, setResult] = useState('');
+  const [score, setScore] = useState(0);
+  const interval = useRef();
 
-    interval;
-
-    componentDidMount() {
-        this.interval = setInterval(this.changeHand, 100);
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-    }
-
-    // shouldComponentUpdate(nextProps, nextState, nextContext) {
-    //     return true;
-    // }
-
-    componentWillUnmount() {
-        clearInterval(this.interval);
-    }
-
-    changeHand = () => {
-      const { imgCoord } = this.state;
-      if(imgCoord === rspCoords.바위) {
-        this.setState({
-          imgCoord: rspCoords.가위,
-        });
-      } else if(imgCoord === rspCoords.가위) {
-        this.setState({
-          imgCoord: rspCoords.보,
-        });
-      } else if(imgCoord === rspCoords.보) {
-        this.setState({
-          imgCoord: rspCoords.바위,
-        });
+    useEffect(() => { // componentDidMount,  componentDidUpdate 역할
+      interval.current = setInterval(changeHand, 100);
+      return () => {
+        clearInterval(interval.current);
       }
+    }, [imgCoord]);
+  const changeHand = () => {
+    if(imgCoord === rspCoords.바위) {
+      setImgcoord(rspCoords.가위);
+    } else if(imgCoord === rspCoords.가위) {
+      setImgcoord(rspCoords.보);
+    } else if(imgCoord === rspCoords.보) {
+      setImgcoord(rspCoords.바위);
     }
+  }
 
-    onClickBtn = (choice) => {
-      const { imgCoord } = this.state;
-      clearInterval(this.interval);
-      const myScore = scores[choice];
-      const cpuScore = scores[computerChoice(imgCoord)];
-      const diff = myScore - cpuScore;
+  const onClickBtn = (choice) => () => {
+    clearInterval(interval.current);
+    const myScore = scores[choice];
+    const cpuScore = scores[computerChoice(imgCoord)];
+    const diff = myScore - cpuScore;
 
-      if(diff === 0) { // 비긴 경우
-        this.setState({
-          result: '비겼습니다!',
-        })
-      } else if ([-1, 2].includes(diff)) {
-        this.setState((prevState) => {
-          return {
-            result: '이겼습니다!',
-            score: prevState.score + 1,
-          };
-        });
-      } else if  ([1, -2].includes(diff)) {
-        this.setState((prevState) => {
-          return {
-            result: '이겼습니다!',
-            score: prevState.score - 1,
-          };
-        });
-      }
-      setTimeout(() => {
-        this.interval = setInterval(this.changeHand, 100);
-      }, 2000);
+    if(diff === 0) { // 비긴 경우
+      setResult('비겼습니다!');
+    } else if ([-1, 2].includes(diff)) {
+      setResult('이겼습니다!');
+      setScore((prevScore) => prevScore + 1);
+    } else if  ([1, -2].includes(diff)) {
+      setResult('졌습니다!');
+      setScore((prevScore) => prevScore - 1);
     }
+    setTimeout(() => {
+      interval.current = setInterval(changeHand, 100);
+    }, 1000);
+  }
 
-    render() {
-      const { imgCoord, result, score } = this.state;
-      return (
-        <>
-          <div id="computer" style={{ background: `url(./rsp.png) ${imgCoord} 0 no-repeat`}} ></div>
-          <div>
-            <button id="rock" className="btn" onClick={() => this.onClickBtn('바위')}>바위</button>
-            <button id="scissor" className="btn" onClick={() => this.onClickBtn('가위')}>가위</button>
-            <button id="paper" className="btn" onClick={() => this.onClickBtn('보')}>보</button>
-          </div>
-          <div>{result}</div>
-          <div>현재 {score}점</div>
-        </>
-      )
-    }
+  return (
+    <>
+      <div id="computer" style={{ background: `url(./rsp.png) ${imgCoord} 0 no-repeat`}} ></div>
+      <div>
+        <button id="rock" className="btn" onClick={onClickBtn('바위')}>바위</button>
+        <button id="scissor" className="btn" onClick={onClickBtn('가위')}>가위</button>
+        <button id="paper" className="btn" onClick={onClickBtn('보')}>보</button>
+      </div>
+      <div>{result}</div>
+      <div>현재 {score}점</div>
+    </>
+  )
 }
 
+RSP.displayName = 'RSP';
 export default RSP;
