@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import useInterval from "./useInterval";
 
 const rspCoords = {
   바위: '-13px',
@@ -22,14 +23,7 @@ const RSP = () => {
   const [imgCoord, setImgcoord] = useState(rspCoords.바위);
   const [result, setResult] = useState('');
   const [score, setScore] = useState(0);
-  const interval = useRef();
-
-    useEffect(() => { // componentDidMount,  componentDidUpdate 역할
-      interval.current = setInterval(changeHand, 100);
-      return () => {
-        clearInterval(interval.current);
-      }
-    }, [imgCoord]);
+  const [isRunning, setIsRunning] = useState(true);
   const changeHand = () => {
     if(imgCoord === rspCoords.바위) {
       setImgcoord(rspCoords.가위);
@@ -40,25 +34,28 @@ const RSP = () => {
     }
   }
 
+  useInterval(changeHand, isRunning ? 100 : null);
   const onClickBtn = (choice) => () => {
-    clearInterval(interval.current);
-    const myScore = scores[choice];
-    const cpuScore = scores[computerChoice(imgCoord)];
-    const diff = myScore - cpuScore;
+    if(isRunning) { // 멈췄을 때 또 클릭하는 것 막기
+      setIsRunning(false);
+      const myScore = scores[choice];
+      const cpuScore = scores[computerChoice(imgCoord)];
+      const diff = myScore - cpuScore;
 
-    if(diff === 0) { // 비긴 경우
-      setResult('비겼습니다!');
-    } else if ([-1, 2].includes(diff)) {
-      setResult('이겼습니다!');
-      setScore((prevScore) => prevScore + 1);
-    } else if  ([1, -2].includes(diff)) {
-      setResult('졌습니다!');
-      setScore((prevScore) => prevScore - 1);
+      if(diff === 0) { // 비긴 경우
+        setResult('비겼습니다!');
+      } else if ([-1, 2].includes(diff)) {
+        setResult('이겼습니다!');
+        setScore((prevScore) => prevScore + 1);
+      } else if  ([1, -2].includes(diff)) {
+        setResult('졌습니다!');
+        setScore((prevScore) => prevScore - 1);
+      }
+      setTimeout(() => {
+        setIsRunning(true);
+      }, 1000);
     }
-    setTimeout(() => {
-      interval.current = setInterval(changeHand, 100);
-    }, 1000);
-  }
+  };
 
   return (
     <>
