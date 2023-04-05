@@ -6,8 +6,6 @@ const rspCoords = {
   보: '-270px',
 }
 
-const dib = ['가위', '바위', '보'];
-
 const scores = {
   가위: 1,
   바위: 0,
@@ -15,6 +13,7 @@ const scores = {
 }
 
 const computerChoice = (imgCoord) => {
+  ready();
   return Object.entries(rspCoords).find(function(v) {
     return v[1] === imgCoord;
   })[0];
@@ -24,33 +23,45 @@ const RSP = () => {
   const [imgCoord, setImgcoord] = useState(rspCoords.바위);
   const [result, setResult] = useState('');
   const [score, setScore] = useState(0);
+  const [message, setMessage] = useState('');
   const interval = useRef();
 
+  const ready = () => {
+    setTimeout(changeHand, 1000);
+    setTimeout(changeHand, 2000);
+    setTimeout(changeHand, 3000);
+  }
+
   useEffect(() => { // componentDidMount,  componentDidUpdate 역할
-    interval.current = setInterval(RandomHand, 1000);
+
+    interval.current = setInterval(randomHand, 1000);
     return () => {
       clearInterval(interval.current);
     }
   }, [imgCoord]);
 
-  const RandomHand = () => {
-    console.log(Math.floor(Math.random()*3))
-    return dib[Math.floor(Math.random()*3)];
+  const randomHand = () => {
+    setMessage('디비~');
+    setMessage('디비~');
+    setTimeout(() => {
+        setMessage('딥!');
+        setImgcoord(rspCoords[Object.keys(rspCoords)[Math.floor(Math.random()*3)]]);
+    }, 1000);
   }
 
   const changeHand = () => {
     if(imgCoord === rspCoords.바위) {
+      setMessage('우주선에서');
       setImgcoord(rspCoords.가위);
     } else if(imgCoord === rspCoords.가위) {
+      setMessage('제로초 형이 내려와');
       setImgcoord(rspCoords.보);
     } else if(imgCoord === rspCoords.보) {
+      setMessage('하는 말!');
       setImgcoord(rspCoords.바위);
     }
   }
 
-  setTimeout(changeHand, 1000);
-  setTimeout(changeHand, 1000);
-  setTimeout(changeHand, 1000);
 
   const onClickBtn = (choice) => () => {
     const myScore = scores[choice];
@@ -61,16 +72,17 @@ const RSP = () => {
       setResult('맞췄습니다!');
       setScore((prevScore) => prevScore + 100);
       setTimeout(() => {
-        interval.current = setInterval(changeHand, 3000);
+        interval.current = setInterval(randomHand, 1000);
       }, 1000);
     } else if ([-1, 2, 1, -2].includes(diff)) {
-      setResult('졌습니다!');
+      setResult('틀렸습니다!');
       clearInterval(interval.current);
     }
   }
 
   return (
     <>
+      <div>{message}</div>
       <div id="computer" style={{ background: `url(./dibidibidip.jpg) ${imgCoord} 0 no-repeat`}} ></div>
       <div>
         <button id="rock" className="btn" onClick={onClickBtn('바위')}>바위</button>
