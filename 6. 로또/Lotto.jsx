@@ -1,4 +1,4 @@
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import Ball from "./Ball";
 
 function getWinNumbers() {
@@ -14,22 +14,22 @@ function getWinNumbers() {
 }
 
 Lotto = () => {
-    [winNumbers,setWinNumbers] = useState(getWinNumbers());
-    [winBalls,setWinBalls] = useState([]); // 당첨 숫자들
-    [bonus, setBonus] = useState(null);
-    [redo,setRedo] = useState(false);
-    timeouts = useRef([]);
+    const [winNumbers,setWinNumbers] = useState(getWinNumbers());
+    cosnt [winBalls,setWinBalls] = useState([]); // 당첨 숫자들
+    const [bonus, setBonus] = useState(null);
+    const [redo,setRedo] = useState(false);
+    const timeouts = useRef([]);
 
   const runTimeouts = () => {
     // console.log('runTimeouts');
     for(let i = 0; i < winNumbers.length - 1; i++) {
-      timeouts[i] = setTimeout(() => {
+      timeouts.current[i] = setTimeout(() => {
         setWinBalls((prevState) => {
           return [...prevState.winBalls, winNumbers[i]];
         });
       }, (i+1) * 1000);
     }
-    timeouts[winNumbers.length-1] = setTimeout(() => {
+    timeouts.current[winNumbers.length-1] = setTimeout(() => {
       setBonus(winNumbers[winNumbers.length-1]);
       setRedo(true);
     }, winNumbers.length*1000);
@@ -38,7 +38,7 @@ Lotto = () => {
   useEffect(() => {
     runTimeouts();
     return {
-      timeouts.forEach((v) => {
+      timeouts.current.forEach((v) => {
         clearTimeout(v);
       });
     }
@@ -48,13 +48,13 @@ Lotto = () => {
     runTimeouts();
   }
 
-  onClickRedo = () => {
+  const onClickRedo = () => {
       // console.log('onClickRedo');
       setWinNumbers(getWinNumbers()); // 당첨 숫자들
       setWinBalls([]); //
       setBonus(null); // 보너스 공
       setRedo(false);
-      timeouts = [];
+      timeouts.current = [];
     }
 
   return (
