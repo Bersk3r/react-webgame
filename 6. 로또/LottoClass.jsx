@@ -50,7 +50,8 @@ class Lotto extends Component {
 
   componentDidUpdate(prevProps, prevState) {
       // console.log('didUpdate');
-      if(this.winBalls.length === 0) {
+      // if(this.winBalls.length === 0) {
+      if(this.timeouts.length === 0) {
         this.runTimeouts();
       }
   }

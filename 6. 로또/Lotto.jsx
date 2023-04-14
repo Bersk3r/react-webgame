@@ -15,13 +15,28 @@ function getWinNumbers() {
 
 Lotto = () => {
     const [winNumbers,setWinNumbers] = useState(getWinNumbers());
-    cosnt [winBalls,setWinBalls] = useState([]); // 당첨 숫자들
+    const [winBalls, setWinBalls] = useState([]); // 당첨 숫자들
     const [bonus, setBonus] = useState(null);
     const [redo,setRedo] = useState(false);
     const timeouts = useRef([]);
 
-  const runTimeouts = () => {
-    // console.log('runTimeouts');
+  // const runTimeouts = () => {
+  //   // console.log('runTimeouts');
+  //   for(let i = 0; i < winNumbers.length - 1; i++) {
+  //     timeouts.current[i] = setTimeout(() => {
+  //       setWinBalls((prevState) => {
+  //         return [...prevState.winBalls, winNumbers[i]];
+  //       });
+  //     }, (i+1) * 1000);
+  //   }
+  //   timeouts.current[winNumbers.length-1] = setTimeout(() => {
+  //     setBonus(winNumbers[winNumbers.length-1]);
+  //     setRedo(true);
+  //   }, winNumbers.length*1000);
+  // }
+
+  useEffect(() => {
+    console.log('useEffect');
     for(let i = 0; i < winNumbers.length - 1; i++) {
       timeouts.current[i] = setTimeout(() => {
         setWinBalls((prevState) => {
@@ -33,16 +48,12 @@ Lotto = () => {
       setBonus(winNumbers[winNumbers.length-1]);
       setRedo(true);
     }, winNumbers.length*1000);
-  }
-
-  useEffect(() => {
-    runTimeouts();
-    return {
+    return () => {
       timeouts.current.forEach((v) => {
         clearTimeout(v);
       });
     }
-  },[])
+  },[timeouts.current]);
 
   if(winBalls.length === 0) {
     runTimeouts();
