@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from "react";
+import React, {useState, useRef, useEffect, useMemo, useCallback } from "react";
 import Ball from "./Ball";
 
 function getWinNumbers() {
@@ -14,7 +14,8 @@ function getWinNumbers() {
 }
 
 Lotto = () => {
-    const [winNumbers,setWinNumbers] = useState(getWinNumbers());
+    const lottoNumbers = useMemo(() => getWinNumbers(), [])
+    const [winNumbers,setWinNumbers] = useState(lottoNumbers);
     const [winBalls, setWinBalls] = useState([]); // 당첨 숫자들
     const [bonus, setBonus] = useState(null);
     const [redo,setRedo] = useState(false);
@@ -59,14 +60,14 @@ Lotto = () => {
     runTimeouts();
   }
 
-  const onClickRedo = () => {
+  const onClickRedo = useCallback(() => {
       // console.log('onClickRedo');
       setWinNumbers(getWinNumbers()); // 당첨 숫자들
       setWinBalls([]); //
       setBonus(null); // 보너스 공
       setRedo(false);
       timeouts.current = [];
-    }
+    },[winNumbers]);
 
   return (
     <>
