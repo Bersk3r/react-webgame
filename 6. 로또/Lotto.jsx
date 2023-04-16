@@ -56,9 +56,9 @@ Lotto = () => {
     }
   },[timeouts.current]);
 
-  if(winBalls.length === 0) {
-    runTimeouts();
-  }
+  useEffect(() => {
+    console.log("로또 숫자를 생성합니다.");
+  },[winNumbers])
 
   const onClickRedo = useCallback(() => {
       // console.log('onClickRedo');

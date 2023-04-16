@@ -46,6 +46,7 @@ class Lotto extends Component {
   componentDidMount() {
     // console.log('didMount');
     this.runTimeouts();
+    console.log("로또 숫자를 생성합니다.");
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -53,6 +54,9 @@ class Lotto extends Component {
       // if(this.winBalls.length === 0) {
       if(this.timeouts.length === 0) {
         this.runTimeouts();
+      }
+      if(prevState.winNumbers !== this.state.winNumbers) {
+        console.log("로또 숫자를 생성합니다.");
       }
   }
 
