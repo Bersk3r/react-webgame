@@ -51,6 +51,7 @@ const reducer = (state, action) => {
           ['', '', ''],
         ],
         recentCell: [-1, -1],
+        // winner: '',
       };
     }
     default:
