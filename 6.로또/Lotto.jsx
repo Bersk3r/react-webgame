@@ -13,7 +13,7 @@ function getWinNumbers() {
   return [...winNumbers, bonusNumber];
 }
 
-Lotto = () => {
+const Lotto = () => {
     const lottoNumbers = useMemo(() => getWinNumbers(), [])
     const [winNumbers,setWinNumbers] = useState(lottoNumbers);
     const [winBalls, setWinBalls] = useState([]); // 당첨 숫자들
